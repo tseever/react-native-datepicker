@@ -15,6 +15,7 @@ import {
 } from 'react-native';
 import Style from './style';
 import Moment from 'moment';
+import WindowsDatePicker from './windowsDatepicker';
 
 const FORMATS = {
   'date': 'YYYY-MM-DD',
@@ -23,6 +24,7 @@ const FORMATS = {
 };
 
 const SUPPORTED_ORIENTATIONS = ['portrait', 'portrait-upside-down', 'landscape', 'landscape-left', 'landscape-right'];
+const SUPPORTED_ORIENTATIONS_WINDOWS = ['portrait'];
 
 class DatePicker extends Component {
   constructor(props) {
@@ -259,7 +261,7 @@ class DatePicker extends Component {
       date: this.getDate()
     });
 
-    if (Platform.OS === 'ios') {
+    if (Platform.OS === 'ios' || Platform.OS === 'windows') {
       this.setModalVisible(true);
     } else {
 
@@ -324,6 +326,92 @@ class DatePicker extends Component {
     return null;
   }
 
+  _renderDatePickerIOS() {
+    const {
+      mode,
+      style,
+      customStyles,
+      disabled,
+      minDate,
+      maxDate,
+      minuteInterval,
+      timeZoneOffsetInMinutes,
+      cancelBtnText,
+      confirmBtnText,
+      TouchableComponent,
+      testID,
+      cancelBtnTestID,
+      confirmBtnTestID,
+      allowFontScaling,
+      locale
+    } = this.props;
+
+    const dateInputStyle = [
+      Style.dateInput, customStyles.dateInput,
+      disabled && Style.disabled,
+      disabled && customStyles.disabled
+    ];
+
+	  return (
+        <DatePickerIOS
+            date={this.state.date}
+            mode={mode}
+            minimumDate={minDate && this.getDate(minDate)}
+            maximumDate={maxDate && this.getDate(maxDate)}
+            onDateChange={this.onDateChange}
+            minuteInterval={minuteInterval}
+            timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
+            style={[Style.datePicker, customStyles.datePicker]}
+            locale={locale}
+        />
+	  );
+  }
+  
+  _renderDatePickerWindows() {
+	  
+    const {
+      mode,
+      style,
+      customStyles,
+      disabled,
+      minDate,
+      maxDate,
+      minuteInterval,
+      timeZoneOffsetInMinutes,
+      cancelBtnText,
+      confirmBtnText,
+      TouchableComponent,
+      testID,
+      cancelBtnTestID,
+      confirmBtnTestID,
+      allowFontScaling,
+      locale
+    } = this.props;
+
+    const dateInputStyle = [
+      Style.dateInput, customStyles.dateInput,
+      disabled && Style.disabled,
+      disabled && customStyles.disabled
+    ];
+	  
+	  return (
+		<View style={{paddingTop: 60, justifyContents: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'transparent'}}>
+		  <WindowsDatePicker {...this.props} onDateChange={this.onDateChange} style={[Style.datePicker, customStyles.datePicker]} />
+		</View>
+	  );
+  }
+  
+  _renderDatePickerComponent() {
+	  if (Platform.OS === 'ios') {
+		return this._renderDatePickerIOS();
+	  }
+	  else if (Platform.OS === 'windows') {
+		 return this._renderDatePickerWindows();
+	  }
+	  
+	  return null;
+  }
+
   render() {
     const {
       mode,
@@ -350,6 +438,12 @@ class DatePicker extends Component {
       disabled && customStyles.disabled
     ];
 
+	let supportedOrientations = SUPPORTED_ORIENTATIONS;
+	
+	if (Platform.OS === 'windows') {
+		supportedOrientations = SUPPORTED_ORIENTATIONS_WINDOWS;
+	}
+
     return (
       <TouchableComponent
         style={[Style.dateTouch, style]}
@@ -367,11 +461,11 @@ class DatePicker extends Component {
               <View/>
           }
           {this._renderIcon()}
-          {Platform.OS === 'ios' && <Modal
+          {(Platform.OS === 'ios' || Platform.OS === 'windows') && <Modal
             transparent={true}
             animationType="none"
             visible={this.state.modalVisible}
-            supportedOrientations={SUPPORTED_ORIENTATIONS}
+            supportedOrientations={supportedOrientations}
             onRequestClose={() => {this.setModalVisible(false);}}
           >
             <View
@@ -391,17 +485,7 @@ class DatePicker extends Component {
                     style={[Style.datePickerCon, {height: this.state.animatedHeight}, customStyles.datePickerCon]}
                   >
                     <View pointerEvents={this.state.allowPointerEvents ? 'auto' : 'none'}>
-                      <DatePickerIOS
-                        date={this.state.date}
-                        mode={mode}
-                        minimumDate={minDate && this.getDate(minDate)}
-                        maximumDate={maxDate && this.getDate(maxDate)}
-                        onDateChange={this.onDateChange}
-                        minuteInterval={minuteInterval}
-                        timeZoneOffsetInMinutes={timeZoneOffsetInMinutes ? timeZoneOffsetInMinutes : null}
-                        style={[Style.datePicker, customStyles.datePicker]}
-                        locale={locale}
-                      />
+						{this._renderDatePickerComponent()}
                     </View>
                     <TouchableComponent
                       underlayColor={'transparent'}
