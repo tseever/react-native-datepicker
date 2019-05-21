@@ -59,7 +59,9 @@ class DatePicker extends Component {
   }
 
   setModalVisible(visible) {
-    const {height, duration} = this.props;
+    let {height, duration} = this.props;
+
+	duration = 0;
 
     // slide animation
     if (visible) {
