@@ -79,8 +79,7 @@ class WindowsDatePicker extends Component {
 
 	let components = this._getDateComponents(this.getDateStr());
 
-	console.log("LANI: components: " +  JSON.stringify(components, null, 2));
-
+    this.state = {
     this.state = {
       date: this.getDate(),
 	  dateComponents: components
@@ -136,8 +135,6 @@ class WindowsDatePicker extends Component {
 		minute: dt.get('minute'),
 		second: dt.get('second')
 	}
-	
-//	console.log("LANI: _getDateComponents: dateStr: " + dateStr + " date: " + dt.format("YYYY-MM-DD") + " components: " + JSON.stringify(components, null, 2));
 	
 	return components;
   }
@@ -204,8 +201,6 @@ class WindowsDatePicker extends Component {
 	
 	let dateComponents = this.state.dateComponents;
 
-	console.log("LANI: finalized dateComponents: " + JSON.stringify(dateComponents, null, 2));
-	
 	let momentObj = Moment();
 	momentObj.set('year', dateComponents.year);
 	momentObj.set('month', dateComponents.month - 1);
@@ -696,8 +691,6 @@ class WindowsDatePicker extends Component {
 				hour = displayHour + 12;
 			}
 		}
-	
-		console.log("LANI: onAmPmPicked: itemValue: " + itemValue + " displayHour: " + displayHour + " hour: " + hour);
 	
 	  this.setState({
 		  dateComponents: {
