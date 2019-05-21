@@ -8,7 +8,8 @@ let style = StyleSheet.create({
     flexDirection: 'row',
     height: 40,
     alignItems: 'center',
-    justifyContent: 'center'
+    justifyContent: 'center',
+	backgroundColor: 'transparent'
   },
   dateIcon: {
     width: 32,
