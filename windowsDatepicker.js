@@ -80,7 +80,6 @@ class WindowsDatePicker extends Component {
 	let components = this._getDateComponents(this.getDateStr());
 
     this.state = {
-    this.state = {
       date: this.getDate(),
 	  dateComponents: components
     };
@@ -774,13 +773,14 @@ class WindowsDatePicker extends Component {
 	  let maxDate = this._getMaxDate();
 
       let style = {...this.props.style, flexDirection: 'row', flexWrap: 'wrap'}
+	  let innerStyle = {paddingTop: 5, paddingBottom: 5, paddingRight: 10, paddingLeft: 10}
 
 	  return (
 		<View style={style}>
-		  <View style={{paddingTop: 5, paddingBottom: 5, paddingRight: 10, paddingLeft: 10}}>
+		  <View style={innerStyle}>
 			{this._renderDatePicker(minDate, maxDate)}
 		  </View>
-		  <View style={{paddingTop: 5, paddingBottom: 5, paddingRight: 10, paddingLeft: 10}}>
+		  <View style={innerStyle}>
 			{this._renderTimePicker()}
 		  </View>
 		</View>
