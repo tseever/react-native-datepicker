@@ -12,7 +12,8 @@ import {
   DatePickerIOS,
   Platform,
   Animated,
-  Keyboard
+  Keyboard,
+  Dimensions
 } from 'react-native';
 import Style from './style';
 import Moment from 'moment';
@@ -772,10 +773,12 @@ class WindowsDatePicker extends Component {
 	  let minDate = this._getMinDate();
 	  let maxDate = this._getMaxDate();
 
-      let style = {...this.props.style, flexDirection: 'row', flexWrap: 'wrap'}
+	  let outerStyle = {...this.props.style, flexDirection: 'row', flex:1,justifyContent:'center', borderWidth: 1, borderColor: '#fff'}
+      let style = {flexWrap: 'wrap', alignItems: 'flex-start'}
 	  let innerStyle = {paddingTop: 5, paddingBottom: 5, paddingRight: 10, paddingLeft: 10}
 
 	  return (
+	  <View style={outerStyle}>
 		<View style={style}>
 		  <View style={innerStyle}>
 			{this._renderDatePicker(minDate, maxDate)}
@@ -783,9 +786,10 @@ class WindowsDatePicker extends Component {
 		  <View style={innerStyle}>
 			{this._renderTimePicker()}
 		  </View>
+		  </View>
 		</View>
 	  );
-  }
+	}
 }
 
 export default WindowsDatePicker;
