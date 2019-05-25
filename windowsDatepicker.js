@@ -82,7 +82,10 @@ class WindowsDatePicker extends Component {
 
     this.state = {
       date: this.getDate(),
-	  dateComponents: components
+	  dateComponents: components,
+	  layout: {
+		flexDir: 'row',
+	  }
     };
 
     this.getDate = this.getDate.bind(this);
@@ -769,16 +772,78 @@ class WindowsDatePicker extends Component {
 	  return maxDate;
   }
 
+  // It seems that flexWrap: 'wrap' is broken when combined with flexDirection: 'row' (which I have also discovered firsthand).
+  // So, this workaround. Calculate the dimension of the laid out datetime components horizontally. If they exceed the window width,
+  // switch from flexDirection: row to flexDirection: column.
+  _determineFlexDirectionBaseOnWindowWidth(layoutWidth) {
+	  let window = Dimensions.get('window');
+	  
+	  if (layoutWidth > window.width) {
+		  return 'column';
+	  }
+	  
+	  return 'row';
+  }
+
+  _onLayout(e) {
+	  let width = e.nativeEvent.layout.width;
+	  let window = Dimensions.get('window');
+	  
+	  let oldWindowWidth = this.state.layout.windowWidth;
+	  let oldLayoutWidth = this.state.layout.width;
+	  let oldFlexDir = this.state.layout.flexDir;
+	  
+	  let flexDir = this._determineFlexDirectionBaseOnWindowWidth(width);
+	  
+	  // Problem: if we shrink the window narrow enough, the datetime picker components will be too wide for the window when
+	  // flexDirection: row, so we should switch to flexDirection: column. But, we have to be careful not to let the behavior get
+	  // confused, because once we switch to flexDirection: column, the date picker component will be vertically above the time
+	  // picker component, and the width will now be less than the window width.
+	  //
+	  // When the user expands the window larger, we eventually want the pickers to be flexDirection: row. If we aren't careful,
+	  // the pickers will oscillate between the two states when the window is too narrow.
+	  //
+	  // If we thought the new flexDir should be column, and the window hasn't changed size since the last layout change, we should
+	  // not try to go back to flexDir = row, or we will get into an oscillation between the two.
+	  if (oldWindowWidth === window.width && oldFlexDir == 'column') {
+		  return;
+	  }
+	  
+	  if (flexDir !== this.state.flexDir) {
+	    this.setState({
+			layout: {
+				windowWidth: window.width,
+				width: width,
+				flexDir: flexDir
+			}
+		});
+	  }
+  }
+
   render() {
 	  let minDate = this._getMinDate();
 	  let maxDate = this._getMaxDate();
+	  
+	  let flexDir = this.state.layout.flexDir;
 
-	  let outerStyle = {...this.props.style, flexDirection: 'row', flex:1,justifyContent:'center', borderWidth: 1, borderColor: '#fff'}
-      let style = {flexWrap: 'wrap', alignItems: 'flex-start'}
+	  let alignItems = undefined;
+	  let justifyContent = undefined;
+
+	if (flexDir === 'row') {
+		justifyContent = 'center';
+		alignItems = 'flex-start';
+	}
+	else {
+		alignItems = 'center';
+		justifyContent = 'flex-start';
+	}
+
+	  let outerStyle = {flexDirection: 'row', justifyContent: 'center', borderWidth: 1, borderColor: '#f00'}
+      let style = {flexDirection: flexDir, justifyContent: justifyContent, alignItems: alignItems}
 	  let innerStyle = {paddingTop: 5, paddingBottom: 5, paddingRight: 10, paddingLeft: 10}
 
 	  return (
-	  <View style={outerStyle}>
+	  <View style={outerStyle} onLayout={this._onLayout.bind(this)}>
 		<View style={style}>
 		  <View style={innerStyle}>
 			{this._renderDatePicker(minDate, maxDate)}
