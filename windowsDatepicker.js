@@ -838,7 +838,7 @@ class WindowsDatePicker extends Component {
 		justifyContent = 'flex-start';
 	}
 
-	  let outerStyle = {flexDirection: 'row', justifyContent: 'center', borderWidth: 1, borderColor: '#f00'}
+	  let outerStyle = {flexDirection: 'row', justifyContent: 'center', borderWidth: 1, borderColor: '#fff'}
       let style = {flexDirection: flexDir, justifyContent: justifyContent, alignItems: alignItems}
 	  let innerStyle = {paddingTop: 5, paddingBottom: 5, paddingRight: 10, paddingLeft: 10}
 
