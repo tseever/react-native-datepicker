@@ -368,9 +368,9 @@ class DatePicker extends Component {
         />
 	  );
   }
-  
+
   _renderDatePickerWindows() {
-	  
+
     const {
       mode,
       style,
@@ -395,14 +395,14 @@ class DatePicker extends Component {
       disabled && Style.disabled,
       disabled && customStyles.disabled
     ];
-	  
+
 	  return (
 		<View style={{paddingTop: 60, justifyContents: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'transparent'}}>
 		  <WindowsDatePicker {...this.props} onDateChange={this.onDateChange} style={[Style.datePicker, customStyles.datePicker]} />
 		</View>
 	  );
   }
-  
+
   _renderDatePickerComponent() {
 	  if (Platform.OS === 'ios') {
 		return this._renderDatePickerIOS();
@@ -410,7 +410,7 @@ class DatePicker extends Component {
 	  else if (Platform.OS === 'windows') {
 		 return this._renderDatePickerWindows();
 	  }
-	  
+
 	  return null;
   }
 
@@ -440,13 +440,21 @@ class DatePicker extends Component {
       disabled && customStyles.disabled
     ];
 
-	let supportedOrientations = SUPPORTED_ORIENTATIONS;
-	
-	if (Platform.OS === 'windows') {
-		supportedOrientations = SUPPORTED_ORIENTATIONS_WINDOWS;
-	}
+    let supportedOrientations = SUPPORTED_ORIENTATIONS;
 
-	let newStyle = {...style, borderWidth:1, borderColor: '#000'}
+    if (Platform.OS === 'windows') {
+      supportedOrientations = SUPPORTED_ORIENTATIONS_WINDOWS;
+    }
+
+    let newStyle = Platform.select({
+      ios: style,
+      android: style,
+      windows: {
+        borderWidth: 1,
+        borderColor: '#000',
+        ...style
+      }
+    });
 
     return (
       <TouchableComponent
