@@ -9,7 +9,7 @@ let style = StyleSheet.create({
     height: 40,
     alignItems: 'center',
     justifyContent: 'center',
-	backgroundColor: 'transparent'
+    backgroundColor: 'transparent'
   },
   dateIcon: {
     width: 32,

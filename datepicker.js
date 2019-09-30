@@ -61,7 +61,7 @@ class DatePicker extends Component {
   setModalVisible(visible) {
     let {height, duration} = this.props;
 
-	duration = 0;
+    duration = 0;
 
     // slide animation
     if (visible) {
@@ -354,7 +354,7 @@ class DatePicker extends Component {
       disabled && customStyles.disabled
     ];
 
-	  return (
+      return (
         <DatePickerIOS
             date={this.state.date}
             mode={mode}
@@ -366,7 +366,7 @@ class DatePicker extends Component {
             style={[Style.datePicker, customStyles.datePicker]}
             locale={locale}
         />
-	  );
+      );
   }
 
   _renderDatePickerWindows() {
@@ -396,22 +396,22 @@ class DatePicker extends Component {
       disabled && customStyles.disabled
     ];
 
-	  return (
-		<View style={{paddingTop: 60, justifyContents: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'transparent'}}>
-		  <WindowsDatePicker {...this.props} onDateChange={this.onDateChange} style={[Style.datePicker, customStyles.datePicker]} />
-		</View>
-	  );
+    return (
+      <View style={{marginTop: 60, justifyContents: 'center', alignItems: 'center', borderWidth: 1, borderColor: 'transparent'}}>
+        <WindowsDatePicker {...this.props} onDateChange={this.onDateChange} style={[Style.datePicker, customStyles.datePicker]} />
+      </View>
+    );
   }
 
   _renderDatePickerComponent() {
-	  if (Platform.OS === 'ios') {
-		return this._renderDatePickerIOS();
-	  }
-	  else if (Platform.OS === 'windows') {
-		 return this._renderDatePickerWindows();
-	  }
+      if (Platform.OS === 'ios') {
+        return this._renderDatePickerIOS();
+      }
+      else if (Platform.OS === 'windows') {
+         return this._renderDatePickerWindows();
+      }
 
-	  return null;
+      return null;
   }
 
   render() {
@@ -484,7 +484,7 @@ class DatePicker extends Component {
               style={{flex: 1}}
             >
               <TouchableComponent
-                style={Style.datePickerMask}
+                style={[Style.datePickerMask, customStyles.datePickerMask]}
                 activeOpacity={1}
                 underlayColor={'#00000077'}
                 onPress={this.onPressMask}
@@ -497,7 +497,7 @@ class DatePicker extends Component {
                     style={[Style.datePickerCon, {height: this.state.animatedHeight}, customStyles.datePickerCon]}
                   >
                     <View pointerEvents={this.state.allowPointerEvents ? 'auto' : 'none'}>
-						{this._renderDatePickerComponent()}
+                      {this._renderDatePickerComponent()}
                     </View>
                     <TouchableComponent
                       underlayColor={'transparent'}
